@@ -1,18 +1,25 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import '../styles/list.css'
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchTodos } from '../store/todoActions';
+import TodoItem from './TodoItem';
 
 const TodoList = () => {
-    const todos = useSelector((state) => state.todos);
+    const { items, loading, error } = useSelector((state) => state.todos);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchTodos());
+    }, [dispatch]);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className='item-wrapper'>
-            {todos.map((todo, index) => (
-                <div className='item' key={index}>
-                    <div className='item-text'>{todo}</div>
-                </div>
+        <ul>
+            {items.map((todo) => (
+                <TodoItem key={todo.id} todo={todo} />
             ))}
-        </div>
+        </ul>
     );
 };
 

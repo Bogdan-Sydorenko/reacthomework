@@ -1,7 +1,7 @@
+
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo } from '../store/slices/todoSlice';
-import '../styles/form.css'
+import { createTodo } from '../store/todoActions';
 
 const TodoForm = () => {
     const [text, setText] = useState('');
@@ -10,22 +10,28 @@ const TodoForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (text.trim()) {
-            dispatch(addTodo(text));
+            const newTodo = {
+                id: Date.now(),
+                title: text,
+                completed: false,
+            };
+            dispatch(createTodo(newTodo));
             setText('');
         }
     };
 
     return (
-        <form className='form-wrapper' onSubmit={handleSubmit}>
-            <input className='form-input'
+        <form onSubmit={handleSubmit}>
+            <input
                 type="text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="ENTER YOUR TODO"
+                placeholder="Enter a todo"
             />
-            <button className='form-button' type="submit">Add</button>
+            <button type="submit">Add</button>
         </form>
     );
 };
 
 export default TodoForm;
+
